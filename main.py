@@ -1,10 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Carrega os dados
+# download data from https://ourworldindata.org/covid-vaccinations
+# and save it as "vaccinations_global.csv" in the same directory as this script
 df = pd.read_csv("vaccinations_global.csv")
 
-# Extrai o ano da coluna de data
+# Extracting the year from the date column
 df["year"] = pd.to_datetime(df["date"]).dt.year
 
 while True:
@@ -19,7 +20,7 @@ while True:
         print("Invalid year. Please enter a 4-digit number.")
         continue
 
-    # Filtra por país e ano
+    # Fiter the DataFrame for the specified country and yea
     df_country_year = df[
         (df["country"].str.lower() == country.lower()) &
         (df["year"] == year)
@@ -29,7 +30,7 @@ while True:
         print(f"No data found for '{country}' in {year}. Please try another.")
         continue
 
-    # Pega a última linha válida do ano com dados de vacinação
+    # it gets the latest vaccination data for the specified country and year
     df_valid = df_country_year.dropna(subset=["people_vaccinated", "people_fully_vaccinated", "total_boosters"])
 
     if df_valid.empty:
@@ -54,7 +55,7 @@ while True:
     print(f"• Fully vaccinated : {int(fully_vaccinated) if not pd.isna(fully_vaccinated) else 'N/A'}")
     print(f"• Boosters         : {int(boosters) if not pd.isna(boosters) else 'N/A'}")
 
-    # Gráfico
+    # Graphical representation of the vaccination data
     plt.figure(figsize=(8, 5))
     plt.bar(labels, values, color="mediumseagreen")
     plt.title(f"COVID-19 Vaccination in {country.title()} – {year}")
